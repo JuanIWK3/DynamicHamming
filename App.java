@@ -7,12 +7,16 @@ public class App {
     public static void main(String[] args) throws Exception {
         boolean[] bits = { false, true, false, false, false, false, false, true };
         int qtndPowers = 0;
+
+        // Definir a quantidade de potências de 2
         for (int i = 0; i < bits.length; i++) {
             if (isPowerOfTwo(i)) {
                 qtndPowers++;
             }
         }
+
         int[] powers = new int[qtndPowers];
+
         boolean[] bitsWithHamming = new boolean[bits.length + powers.length];
 
         for (int i = 0; i < powers.length; i++) {
@@ -21,46 +25,65 @@ public class App {
 
         boolean[] hammingBits = new boolean[powers.length];
 
+        // Para cada potência de 2
         for (int i = 0; i < powers.length; i++) {
-            int count = powers[i];
+            int count = powers[i]; // Começar na casa correta
             System.out.println("Bits verificados no h" + (powers[i] - 1));
             boolean xor = false;
 
-            while (count < bits.length) {
+            // Para ler todos os números
+            while (count <= bits.length + 1) {
+                // Ler a quantidade powers[i] de casas
                 for (int j = 0; j < powers[i]; j++) {
+                    if (i == 3) {
+                        System.out.println("=========");
+                        System.out.println(count - 1);
+                        System.out.println("=========");
+                    }
+                    // Para não ler mais que o existente
                     if (count < bits.length) {
                         System.out.print(count - 1 + " ");
-                        xor = xor ^ bits[count - 1];
+                        // Calcular o valor do bit de hamming
+                        xor = xor ^ bits[count];
                     }
                     count++;
                 }
+                // Pular a quantidade powers[i] de casas
                 for (int j = 0; j < powers[i]; j++) {
                     count++;
                 }
             }
-            hammingBits[i] = xor;
+            hammingBits[i] = !xor;
             System.out.println();
         }
 
+        System.out.println("Hamming Bits");
         for (int i = 0; i < hammingBits.length; i++) {
-            System.out.println(hammingBits[i] ? 1 : 0);
+            System.out.print(hammingBits[i] ? 1 + " " : 0 + " ");
         }
+        System.out.println();
 
         System.out.println();
 
         int bitsCount = 0;
         int hammingBitsCount = 0;
 
+        // Preencher o novo array
         for (int i = 0; i < bitsWithHamming.length; i++) {
-            if (isPowerOfTwo(i + 1)) {
+            // Se a posi for uma potência de dois, bit de hamming
+
+            if (isPowerOfTwo(i + 1) && hammingBitsCount != hammingBits.length) {
                 System.out.println(i + " hamming");
                 bitsWithHamming[i] = hammingBits[hammingBitsCount];
                 hammingBitsCount++;
             } else {
-                System.out.println(i);
-                bitsWithHamming[i] = bits[bitsCount];
-                bitsCount++;
+                if (bitsCount != bits.length) {
+                    System.out.println(i);
+                    bitsWithHamming[i] = bits[bitsCount];
+                    bitsCount++;
+                }
             }
+
         }
 
         System.out.println();
